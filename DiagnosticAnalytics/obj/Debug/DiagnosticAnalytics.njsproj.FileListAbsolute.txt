@@ -1,0 +1,3 @@
+G:\HackWell\Diagnostic-Analysis\DiagnosticAnalytics\obj\Debug\DiagnosticAnalytics.njsproj.AssemblyReference.cache
+G:\HackWell\Diagnostic-Analysis\DiagnosticAnalytics\obj\Debug\DiagnosticAnalytics.njsproj.CoreCompileInputs.cache
+G:\HackWell\Diagnostic-Analysis\DiagnosticAnalytics\bin\Microsoft.NodejsTools.WebRole.dll
