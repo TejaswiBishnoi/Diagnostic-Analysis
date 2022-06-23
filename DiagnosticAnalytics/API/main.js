@@ -1,6 +1,7 @@
 //need information from the body
 const fs = require("fs");
 const bodyParser = require("body-parser");
+const { MAP } = require("requirejs");
 
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -16,6 +17,8 @@ function makeStruct(keys) {
     return constructor;
 }
 
+let TESTCASE = "CheckForValidityOfRecipient(): 62b2c066 RecipientIndex= 0, 3c00001  20971522";
+
 // WHOIS	1.000000	8904.000000	0.000112
 // IAM	0.000000	5100.000000	0.000000
 // RPM	0.000000	28.000000	0.000000
@@ -27,7 +30,7 @@ function makeStruct(keys) {
 // BADDLIST	0.000000	4.000000	0.000000
 // BGETINFO	0.000000	1.000000	0.000000
 // BUTCTIMSYNC
-const BACnetServices = new makeStruct("WHOIS, IAM, RPM, RP, RR, AlmAck, UnCOVnt, getEvSum,BADDLIST, BGETINFO, BUTCTIMSYNC, MbusFrame");
+const BACnetServices = new makeStruct("WHOIS, IAM, RPM, RP, RR, AlmAck, UnCOVnt, getEvSum,BADDLIST, BGETINFO, BUTCTIMSYNC");
 
 const EthernetStatics = new makeStruct("Rx_Bytes, Tx_Bytes, Rx_Drop, Tx_Drop, Rx_Error, Tx_Error, Rx_Packets, Tx_Packets");
 
@@ -56,26 +59,191 @@ function displayLogFile(req, res)
 {
     var array;
 
-    fs.readFile(req.body.file, "utf8", (err, data) => {
-        if(err) throw err;
-            array = data.toString().split("\n");
+    // fs.readFile(req.body.file, "utf8", (err, data) => {
+    //     if(err) throw err;
+    //         array = data.toString().split("\n");
         
-        for(i in array) {
-            console.log(array[i]);  //debugging
-            array[i].split(" ");
-            }
-    });
+    //     for(i in array) {
+    //         console.log(array[i]);  //debugging
+    //         array[i].split(" ");
+    //         }
+    // });
+
+    array = TESTCASE.split(" ");
     
-    const ErrorFreuency = new Map();
 
+    var TotalNumberofErrors = 0;
     var lineNumber = 0;
+    var TotalNumberofAlarmEntry = 0;
+    var TotalSuccessfulAlarm = 0;
+    var TotalMbusCalled = 0;
 
-    for(i in array)
+
+    const BACnetSERVICES = new Map();
+    const BACnetSTATICS = new Map();
+    const MemoryUSAGE = new Map();
+    const ValidityofRECIPIENT = new Map();
+    const EthernetSTATICS = new Map();
+    
+    
+
+
+    for(let i = 0; i< array.length; i++)
     {
-        line = line + 1;
-        for(j in array[i])
-        {
+        lineNumber = lineNumber + 1;
 
+        for(let j = 0; j< array[i].length; j++)
+        {
+            if(array[i][j] === "CreateAlarmEntry():objid:")
+            {
+                TotalNumberofAlarmEntry = TotalNumberofAlarmEntry + 1;
+            }
+            if(array[i][j] === "SenCOVMessage():")
+            {
+                TotalNumberofErrors = TotalNumberofErrors + 1;
+            }
+            if(array[i][j] === "CheckForValidityOfRecipient():")
+            {
+                var TIME = array[i][j+1] //the timestamp
+                j = j+2; //skipping over the mentioned
+
+
+                var toBe = "";
+                for(let k = j; k< array[i].length; k++)
+                {
+                    toBe = toBe + array[i][k];
+                }
+
+                const here = new CheckForValidityOfRecipient(toBe);
+
+                ValidityofRECIPIENT.set(TIME, here);
+            }
+
+            if(array[i][j] === "CheckForValidityOfRecipient():Sent")
+            {
+                TotalSuccessfulAlarm = TotalSuccessfulAlarm + 1;
+            }
+
+            if(array[i][j] === "Mbus")
+            {
+                TotalMbusCalled = TotalMbusCalled + 1;
+            }
+
+            if(array[i][j] === "BACnet")
+            {
+                if(array[i][j+1] === "Services")
+                {
+                    //fix time !!!!
+                    var TIME = array[i][j+5];
+
+                    let k = i;
+                    
+                    const temp = new Map();
+
+                    for(k = i; k <= i+10; k++)
+                    {
+                        var key = array[k][0];
+                        
+                        var toBe = "";
+                        for(let w = 1; w<array[k].length; w++)
+                        {
+                            toBe += array[k][w];
+                        }
+                        temp.set(key, toBe);
+                    }
+                    //const BACnetServices = new makeStruct("WHOIS, IAM, RPM, RP, RR, AlmAck, UnCOVnt, getEvSum,BADDLIST, BGETINFO, BUTCTIMSYNC");
+                    const here = new BACnetServices(temp["WHOIS"], temp["IAM"], temp["RPM"], temp["RP"], temp["RR"], temp["AlmAck"], temp["UnCOVnt"], temp["getEvSum"], temp["BADDLIST"], temp["BGETINFO"], temp["BUTCTIMSYNC"]);
+
+                    BACnetSERVICES.set(TIME, here);
+
+                }
+                if(array[i][j+1] === "statistics")
+                {
+                    var lastWord = array[i].length - 1;
+                    var TIME = "";
+
+                    var lengthOfLastWord = array[i][lastWord].length ;
+
+                    for(let k = 5; k<lengthOfLastWord; ++k)
+                    {
+                        TIME += array[lastWord][k];
+                    }
+
+                    //i+1, i+2 -> ALQ
+                    //after that, each three lines has NLQ0, NLQ1, NLQ2
+
+                    const temp = new Map();
+
+                    let str = "";
+                    for(let k = i+1; k<=i+2; k++)
+                    {
+                        for(let w = 1; w < array[k].length; w++)
+                        {
+                            str += array[k][w];
+                        }
+                    }
+                    temp.set("ALQ", str);
+
+                    str = "";
+
+                    for(let k = i+3; k<=i+5; k++)
+                    {
+                        for(let w = 1; w < array[k].length; w++)
+                        {
+                            str += array[k][w];
+                        }
+                    }
+
+                    temp.set("NLQ0", str);
+
+                    str = "";
+
+                    for(let k = i+6; k<=i+8; k++)
+                    {
+                        for(let w = 1; w < array[k].length; w++)
+                        {
+                            str += array[k][w];
+                        }
+                    }
+
+                    temp.set("NLQ1", str);
+
+                    str = "";
+
+                    for(let k = i+9; k<=i+11; k++)
+                    {
+                        for(let w = 1; w < array[k].length; w++)
+                        {
+                            str += array[k][w];
+                        }
+                    }
+
+                    temp.set("NLQ2", str);
+
+                    str = "";
+
+                    for(let k = i+12; k<=i+14; k++)
+                    {
+                        for(let w = 1; w < array[k].length; w++)
+                        {
+                            str += array[k][w];
+                        }
+                    }
+
+                    temp.set("NLQ3", str);
+
+                    const here = new BacnetStatics(temp["ALQ"], temp["NLQ0"], temp["NLQ1"], temp["NLQ2"], temp["NLQ3"]);
+
+                    //const BacnetStatics = new makeStruct("ALQ, NLQ0, NLQ1, NLQ2, NLQ3");
+
+                }
+            }
+
+            if(array[i][0] === "Ethernet")
+            {
+                var TIME = "";
+
+            }
         }
     }
     
