@@ -34,7 +34,7 @@ A web application designed to perform analytics on stream of data from embedded 
   <li><h3>ReGraph: </h3>
     ReGraph is a react toolkit for graph visualisation. The service allows for Automatic Data, Network Filtering, Custom Styling and Time Based anlysis etc. Thus was fit for developing interactive graphs.
   <li><h3>RAM based storing</h3>
-    The file is stored on RAM rather than on the hard disk. Thus, it creates a temporary, use-and-throw based service system thus allowing space optimisation and faster read write.
+    Multer provides the option for the file to be stored on RAM or on the local disk, thus creating a double copy. We have thus opted for the RAM based temporary storage hence creating a use-and-throw based service system thus allowing space optimisation and faster read write.
     </li>
  
  
