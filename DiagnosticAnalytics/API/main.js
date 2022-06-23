@@ -84,6 +84,7 @@ function displayLogFile(req, res)
     const MemoryUSAGE = new Map();
     const ValidityofRECIPIENT = new Map();
     const EthernetSTATICS = new Map();
+    const StartingNow = [];
     
     
 
@@ -133,8 +134,13 @@ function displayLogFile(req, res)
             {
                 if(array[i][j+1] === "Services")
                 {
-                    //fix time !!!!
-                    var TIME = array[i][j+5];
+                    
+                    var TIME = "";
+
+                    for(let b = 5; b < array[array[i].length - 1]; b++)
+                    {
+                        TIME += array[array[i].length -1][b];
+                    }
 
                     let k = i;
                     
@@ -233,7 +239,8 @@ function displayLogFile(req, res)
                     temp.set("NLQ3", str);
 
                     const here = new BacnetStatics(temp["ALQ"], temp["NLQ0"], temp["NLQ1"], temp["NLQ2"], temp["NLQ3"]);
-
+                    
+                    BACnetSTATICS.set(TIME, here);
                     //const BacnetStatics = new makeStruct("ALQ, NLQ0, NLQ1, NLQ2, NLQ3");
 
                 }
@@ -241,8 +248,40 @@ function displayLogFile(req, res)
 
             if(array[i][0] === "Ethernet")
             {
-                var TIME = "";
+                var TIME = array[i][arr[i].length - 1];
+                //const EthernetStatics = new makeStruct("Rx_Bytes, Tx_Bytes, Rx_Drop, Tx_Drop, Rx_Error, Tx_Error, Rx_Packets, Tx_Packets");
+                var RxBytes = array[i+1][1];
+                var TxBytes = array[i+2][1];
+                var RxDrop = array[i+3][1];
+                var TxDrop = array[i+4][1];
+                var RxError = array[i+5][1];
+                var TxError = array[i+6][1];
+                var RxPackets = array[i+7][1];
+                var TxPackets = array[i+8][1];
 
+                const here = new EthernetStatics(RxBytes, TxBytes, RxDrop, TxDrop, RxError, TxError, RxPackets, TxPackets);
+
+                EthernetSTATICS.set(TIME, here);
+
+            }
+
+            if(array[i][0] === "Memory")
+            {
+                var TIME = array[i][array[i].length -1];
+
+                var TotalMemory = array[i+1][array[i+1].length - 2];
+                var AvailableMemory = array[i+2][array[i+2].length - 2];
+
+                const here = new MemoryUsage(TotalMemory, AvailableMemory);
+
+                MemoryUSAGE.set(TIME, here);
+            }
+
+            if(array[i][0] === "*********")
+            {
+                var TIME = array[i][array[i].length - 2];
+                
+                StartingNow.push(TIME);
             }
         }
     }
