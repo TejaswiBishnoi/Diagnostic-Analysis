@@ -105,14 +105,14 @@ function displayLogFile(req, res)
             }
             if(array[i][j] === "CheckForValidityOfRecipient():")
             {
-                var TIME = array[i][j+1] //the timestamp
+                var TIME = array[i][j+1]; //the timestamp
                 j = j+2; //skipping over the mentioned
 
 
-                var toBe = "";
+                var toBe = " ";
                 for(let k = j; k< array[i].length; k++)
                 {
-                    toBe = toBe + array[i][k];
+                    toBe = toBe + array[i][k] + " ";
                 }
 
                 const here = new CheckForValidityOfRecipient(toBe);
@@ -150,10 +150,11 @@ function displayLogFile(req, res)
                     {
                         var key = array[k][0];
                         
-                        var toBe = "";
+                        var toBe = " ";
                         for(let w = 1; w<array[k].length; w++)
                         {
                             toBe += array[k][w];
+                            toBe += " ";
                         }
                         temp.set(key, toBe);
                     }
@@ -180,60 +181,68 @@ function displayLogFile(req, res)
 
                     const temp = new Map();
 
-                    let str = "";
+                    let str = " ";
                     for(let k = i+1; k<=i+2; k++)
                     {
                         for(let w = 1; w < array[k].length; w++)
                         {
                             str += array[k][w];
+                            str += " ";
                         }
                     }
                     temp.set("ALQ", str);
 
-                    str = "";
+                    str = " ";
 
                     for(let k = i+3; k<=i+5; k++)
                     {
                         for(let w = 1; w < array[k].length; w++)
                         {
                             str += array[k][w];
+                            str += " ";
                         }
                     }
 
                     temp.set("NLQ0", str);
 
-                    str = "";
+                    str = " ";
 
                     for(let k = i+6; k<=i+8; k++)
                     {
                         for(let w = 1; w < array[k].length; w++)
                         {
                             str += array[k][w];
+                            str += " ";
                         }
+                        
                     }
 
                     temp.set("NLQ1", str);
 
-                    str = "";
+                    str = " ";
 
                     for(let k = i+9; k<=i+11; k++)
                     {
                         for(let w = 1; w < array[k].length; w++)
                         {
                             str += array[k][w];
+                            str += " ";
                         }
+                        
                     }
 
                     temp.set("NLQ2", str);
 
-                    str = "";
+                    str = " ";
 
                     for(let k = i+12; k<=i+14; k++)
                     {
                         for(let w = 1; w < array[k].length; w++)
                         {
                             str += array[k][w];
+                            str += " ";
                         }
+                    
                     }
 
                     temp.set("NLQ3", str);
@@ -285,6 +294,356 @@ function displayLogFile(req, res)
             }
         }
     }
+
+    //const BacnetStatics = new makeStruct("ALQ, NLQ0, NLQ1, NLQ2, NLQ3");
+    //to give -> object for ALQ, NLQ0....
+    //bacnet statics -> ALQ, NLQ....
+
+    
+    var BackNETSTATICS = [];
+
+    BACnetSTATICS.forEach (function(value, key) {
+        //key -> timestamp
+        //value -> string
+
+        var arrALQ = value.ALQ.split(" ");
+        var arrNLQ0 = value.NLQ0.spilt(" ");
+        var arrNLQ1 = value.NLQ1.spilt(" ");
+        var arrNLQ2 = value.NLQ2.spilt(" ");
+        var arrNLQ3 = value.NLQ3.spilt(" ");
+
+        const BACNETSTATICS = {
+            timestamp: parseInt(key,16)*1000,
+            data: {
+                ALQ: {
+                    totalrecordsadded: parseInt(arrALQ[3].slice(0, arrALQ[3].length-1)), 
+                    totalrecordsdropped: parseInt(arrALQ[6]),
+                    usedrecordscount: parseInt(arrALQ[10].slice(0, arrALQ[10].length - 1)) , 
+                    readindex: parseInt(arrALQ[13].slice(0,arrALQ[13].length - 1)), 
+                    currentindex : parseInt(arrALQ[16])
+                },
+                NLQ0: {
+                    totalrecordsadded: parseInt(arrNLQ0[3].slice(0, arrNLQ0[3].length-1)), 
+                    totalrecordsdropped: parseInt(arrNLQ0[6]),
+                    usedrecordscount: parseInt(arrNLQ0[10].slice(0, arrNLQ0[10].length - 1)) , 
+                    readindex: parseInt(arrNLQ0[13].slice(0,arrNLQ0[13].length - 1)), 
+                    currentindex : parseInt(arrNLQ0[16]),
+                    freecount: parseInt(arrNLQ0[20].slice(0, arrNLQ0[20].length - 1)), 
+                    dropiam: parseInt(arrNLQ0[23]),
+                    nlqloadpctlimit: parseInt(arrNLQ0[26])
+                },
+                NLQ1: {
+                    totalrecordsadded: parseInt(arrNLQ1[3].slice(0, arrNLQ1[3].length-1)), 
+                    totalrecordsdropped: parseInt(arrNLQ1[6]),
+                    usedrecordscount: parseInt(arrNLQ1[10].slice(0, arrNLQ1[10].length - 1)) , 
+                    readindex: parseInt(arrNLQ1[13].slice(0,arrNLQ1[13].length - 1)), 
+                    currentindex : parseInt(arrNLQ1[16]),
+                    freecount: parseInt(arrNLQ1[20].slice(0, arrNLQ1[20].length - 1)), 
+                    dropiam: parseInt(arrNLQ1[23]),
+                    nlqloadpctlimit: parseInt(arrNLQ1[26])
+                },
+                NLQ2: {
+                    totalrecordsadded: parseInt(arrNLQ2[3].slice(0, arrNLQ2[3].length-1)), 
+                    totalrecordsdropped: parseInt(arrNLQ2[6]),
+                    usedrecordscount: parseInt(arrNLQ2[10].slice(0, arrNLQ2[10].length - 1)) , 
+                    readindex: parseInt(arrNLQ2[13].slice(0,arrNLQ2[13].length - 1)), 
+                    currentindex : parseInt(arrNLQ2[16]),
+                    freecount: parseInt(arrNLQ2[20].slice(0, arrNLQ2[20].length - 1)), 
+                    dropiam: parseInt(arrNLQ2[23]),
+                    nlqloadpctlimit: parseInt(arrNLQ2[26])
+                },
+                NLQ3: {
+                    totalrecordsadded: parseInt(arrNLQ3[3].slice(0, arrNLQ3[3].length-1)), 
+                    totalrecordsdropped: parseInt(arrNLQ3[6]),
+                    usedrecordscount: parseInt(arrNLQ3[10].slice(0, arrNLQ3[10].length - 1)) , 
+                    readindex: parseInt(arrNLQ3[13].slice(0,arrNLQ3[13].length - 1)), 
+                    currentindex : parseInt(arrNLQ3[16]),
+                    freecount: parseInt(arrNLQ3[20].slice(0, arrNLQ3[20].length - 1)), 
+                    dropiam: parseInt(arrNLQ3[23]),
+                    nlqloadpctlimit: parseInt(arrNLQ3[26])
+                },
+            }
+        }
+
+        BackNETSTATICS.push(BACNETSTATICS);
+        
+    });
+
+    var BackNETSERVICES = [];
+
+    BACnetSERVICES.forEach(function (value, key){
+
+        var arrayWHOIS = [];
+        var arrayIAM = [];
+        var arrayRPM = [];
+        var arrayRP = [];
+        var arrayRR = [];
+        var arrayAlmAck = [];
+        var arrayUnCOVnt = [];
+        var arraygetEvSum = [];
+        var arrayBADDLIST = [];
+        var arrayBGETINFO = [];
+        var arrayBUTCTIMSYNC = [];
+
+        var whois = value.WHOIS.split(" ");
+
+        for(let i = 0; i < whois.length; i++)
+        {
+            if(whois[i] != " ")
+            {
+                arrayWHOIS.push(whois[i]);
+            }
+        }
+
+        var iam = value.IAM.split(" ");
+
+        for(let i = 0; i < iam.length; i++)
+        {
+            if(iam[i] != " ")
+            {
+                arrayIAM.push(iam[i]);
+            }
+        }
+
+        var rpm = value.RPM.split(" ");
+
+        for(let i = 0; i < rpm.length; i++)
+        {
+            if(rpm[i] != " ")
+            {
+                arrayRPM.push(rpm[i]);
+            }
+        }
+
+        var rr = value.RR.split(" ");
+
+        for(let i = 0; i <rr.length; i++)
+        {
+            if(rr[i] != " ")
+            {
+                arrayRR.push(rr[i]);
+            }
+        }
+
+        var rp = value.RP.split(" ");
+
+        for(let i = 0; i < rp.length; i++)
+        {
+            if(rp[i] != " ")
+            {
+                arrayRP.push(rp[i]);
+            }
+        }
+
+        var almack = value.AlmAck.split(" ");
+
+        for(let i = 0; i < almack.length; i++)
+        {
+            if(almack[i] != " ")
+            {
+                arrayAlmAck.push(almack[i]);
+            }
+        }
+
+        var uncovnt = value.UnCOVnt.split(" ");
+
+        for(let i = 0; i < rp.length; i++)
+        {
+            if(uncovnt[i] != " ")
+            {
+                arrayUnCOVnt.push(uncovnt[i]);
+            }
+        }
+
+        var getevsum = value.getEvSum.split(" ");
+
+        for(let i = 0; i < getevsum.length; i++)
+        {
+            if(getevsum[i] != " ")
+            {
+                arraygetEvSum.push(getevsum[i]);
+            }
+        }
+
+        var baddlist = value.BADDLIST.split(" ");
+
+        for(let i = 0; i < baddlist.length; i++)
+        {
+            if(baddlist[i] != " ")
+            {
+                arrayBADDLIST.push(baddlist[i]);
+            }
+        }
+
+
+        var bgetinfo = value.BGETINFO.split(" ");
+
+        for(let i = 0; i < bgetinfo.length; i++)
+        {
+            if(bgetinfo[i] != " ")
+            {
+                arrayBGETINFO.push(bgetinfo[i]);
+            }
+        }
+
+        var butctimsync = value.BUTCTIMSYNC.split(" ");
+
+        for(let i = 0; i < butctimsync.length; i++)
+        {
+            if(butctimsync[i] != " ")
+            {
+                arrayBUTCTIMSYNC.push(butctimsync[i]);
+            }
+        }
+
+
+        const BACNETSERVICES = {
+
+            timestamp: parseInt(key, 16)*1000,
+
+            data:{
+                _WHOIS:{
+                    totalExecutionTime: whois[0],
+                    totalNumberOfRequests: whois[1],
+                    timePerRequest: whois[2]
+                },
+                _IAM:{
+                    totalExecutionTime: iam[0],
+                    totalNumberOfRequests: iam[1],
+                    timePerRequest: iam[2]
+                },
+                _RPM:{
+                    totalExecutionTime: rpm[0],
+                    totalNumberOfRequests: rpm[1],
+                    timePerRequest: rpm[2]
+                },
+                _RP:{
+                    totalExecutionTime: rp[0],
+                    totalNumberOfRequests: rp[1],
+                    timePerRequest: rp[2]
+                }, 
+                _RR:{
+                    totalExecutionTime: rr[0],
+                    totalNumberOfRequests: rr[1],
+                    timePerRequest: rr[2]
+                },
+                _AlmAck:{
+                    totalExecutionTime: almack[0],
+                    totalNumberOfRequests: almack[1],
+                    timePerRequest: almack[2]
+                },
+                _UnCOVnt:{
+                    totalExecutionTime: uncovnt[0],
+                    totalNumberOfRequests: uncovnt[1],
+                    timePerRequest: uncovnt[2]
+                },
+                _getEvSum:{
+                    totalExecutionTime: getevsum[0],
+                    totalNumberOfRequests: getevsum[1],
+                    timePerRequest: getevsum[2]
+                },
+                _BADDLIST:{
+                    totalExecutionTime: baddlist[0],
+                    totalNumberOfRequests: baddlist[1],
+                    timePerRequest: baddlist[2]
+                },
+                _BGETINFO:{
+                    totalExecutionTime: bgetinfo[0],
+                    totalNumberOfRequests: bgetinfo[1],
+                    timePerRequest: bgetinfo[2]
+                },
+                _BUTCTIMSYNC:{
+                    totalExecutionTime: butctimsync[0],
+                    totalNumberOfRequests: butctimsync[1],
+                    timePerRequest: butctimsync[2]
+                }
+
+            }
+
+        }
+        BackNETSERVICES.push(BACNETSERVICES);
+    });
+
+    //const MemoryUsage = new makeStruct("TotalSystemMemory, AvailableSystemMemory");
+
+    var MEMORY = [];
+    MemoryUSAGE.forEach(function(value, key){
+
+        const MEMORYUSAGE = {
+            timestamp: parseInt(key, 16)*1000,
+            data:{
+                totalmemory: value.TotalSystemMemory,
+                availablememory: value.AvailableSystemMemory
+            }
+        }
+
+        MEMORY.push(MEMORYUSAGE);
+    });
+
+    var RECIPIENT = [];
+    // it has 0, number number
+
+    CheckForValidityOfRecipient.forEach(function(value, key){
+
+        var arrValidity = value.RecipientIndex.split(" ");
+
+        var arrHere = [];
+        var flag = 0;
+        for(let i = 0; i < arrValidity.length; i++)
+        {
+            if(arrValidity[i] != " ")
+            {
+                if(flag == 0)
+                {
+                    //the first one has ',' in the end
+                    arrHere.push(arrValidity[i].slice(0, arrValidity[i].length - 1));
+                    flag = 1;
+                }
+                else 
+                {
+                    arrHere.push(arrValidity[i]);
+                }
+                
+            }
+        }
+        const VALIDITYOFRECIPIENT = {
+            timestamp: parseInt(key, 16)*1000,
+            data:{
+                Recipientindex:arrHere[0],
+                NotificationclassId:arrHere[1],
+                ObjectId:arrHere[2]
+            }
+        }
+
+        RECIPIENT.push(VALIDITYOFRECIPIENT);
+    });
+
+    var ETHERNET = [];
+
+    EthernetSTATICS.forEach(function(value, key){
+    //const EthernetStatics = new makeStruct("Rx_Bytes, Tx_Bytes, Rx_Drop, Tx_Drop, Rx_Error, Tx_Error, Rx_Packets, Tx_Packets");
+        const ETHERNETSTATICS = {
+            timestamp: parseInt(key, 16)*1000,
+            data:{
+                rxbytes:value.Rx_Bytes,
+                txbytes:value.Tx_Bytes,
+                rxdrop:value.Rx_Drop,
+                txdrop:value.Tx_Drop,
+                rxerror:value.Rx_Error,
+                txerror:value.Tx_Error,
+                rxpackets:value.Rx_Packets,
+                txpackets:value.Tx_Packets
+            }
+        }
+
+        ETHERNET.push(ETHERNETSTATICS);
+    });
+
+    
+
+
+    
+    
     
 }
 
