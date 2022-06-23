@@ -24,7 +24,7 @@ A web application designed to perform analytics on stream of data from embedded 
     A regular expression is a form of advanced searching that looks for <b>specific patterns</b>. Hence RegEx you can use pattern matching to search for particular strings of characters rather than constructing multiple, literal search queries. Thus the search is more elegant and efficient.
   </li>
   <li><h3>Flexible and fast backend:</h3>
-    The server is run using <b>express</b>. It enhances the functionality of Node js and makes API devlopment, routing, making HTTPS requests easy. 
+    The server is run using <b>express</b>. It enhances the functionality of Node js and makes API development, routing, making HTTPS requests easy. 
     The backend is based on Node js, thus data processing and client-server interaction, development, and progression and all carried out at a faster rate. Both these technologies allow JavaScript to be used for both frontend and the backend.
   </li>
   <li>
@@ -32,7 +32,7 @@ A web application designed to perform analytics on stream of data from embedded 
     React provides <b>faster rendering</b> by the use of virtual DOM and has a wide variety of developer tools. <b>Bootstrap</b> provides high end designs and thus makes the web application more interactive and appealing to the user.
   </li>
   <li><h3>ReGraph: </h3>
-    ReGraph is a react toolkit for graph visualisation. The service allows for Automatic Data, Network Filtering, Custom Styling and Time Based anlysis etc. Thus was fit for developing interactive graphs.
+    ReGraph is a react toolkit for graph visualisation. The service allows for Automatic Data, Network Filtering, Custom Styling and Time Based analysis etc. Thus was fit for developing interactive graphs.
   <li><h3>RAM based storing</h3>
     Multer provides the option for the file to be stored on RAM or on the local disk, thus creating a double copy. We have thus opted for the RAM based temporary storage hence creating a use-and-throw based service system thus allowing space optimisation and faster read write.
     </li>
