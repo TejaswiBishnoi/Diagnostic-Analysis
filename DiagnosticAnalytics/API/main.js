@@ -290,7 +290,8 @@ function displayLogFile(req, res)
             {
                 var TIME = array[i][array[i].length - 2];
                 
-                StartingNow.push(TIME);
+                var timehere = parseInt(TIME, 16)*1000;
+                StartingNow.push(timehere);
             }
         }
     }
@@ -639,9 +640,17 @@ function displayLogFile(req, res)
         ETHERNET.push(ETHERNETSTATICS);
     });
 
-    
+    var FINALSENDING = [];
 
+    FINALSENDING.push(BackNETSTATICS );
+    FINALSENDING.push(BackNETSERVICES);
+    FINALSENDING.push(MEMORY);
+    FINALSENDING.push(RECIPIENT);
+    FINALSENDING.push(ETHERNET);
+    FINALSENDING.push(StartingNow);
+    FINALSENDING.push([TotalNumberofErrors, lineNumber, TotalNumberofAlarmEntry,TotalSuccessfulAlarm,TotalMbusCalled]);
 
+    res.send(FINALSENDING);
     
     
     
