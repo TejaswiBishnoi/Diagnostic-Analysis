@@ -24,7 +24,7 @@ A web application designed to perform analytics on stream of data from embedded 
     A regular expression is a form of advanced searching that looks for <b>specific patterns</b>. Hence RegEx you can use pattern matching to search for particular strings of characters rather than constructing multiple, literal search queries. Thus the search is more elegant and efficient.
   </li>
   <li><h3>Flexible and fast backend:</h3>
-    The server is run using <b>express</b>. It enhances the functionality of Node js and makes API devlopment, routing, making HTTPS requests easy. 
+    The server is run using <b>express</b>. It enhances the functionality of Node js and makes API development, routing, making HTTPS requests easy. 
     The backend is based on Node js, thus data processing and client-server interaction, development, and progression and all carried out at a faster rate. Both these technologies allow JavaScript to be used for both frontend and the backend.
   </li>
   <li>
