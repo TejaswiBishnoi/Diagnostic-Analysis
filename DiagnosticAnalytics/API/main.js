@@ -158,7 +158,7 @@ function displayLogFile(req, res)
                         temp.set(key, toBe);
                     }
                     //const BACnetServices = new makeStruct("WHOIS, IAM, RPM, RP, RR, AlmAck, UnCOVnt, getEvSum,BADDLIST, BGETINFO, BUTCTIMSYNC");
-                    const here = new BACnetServices(temp["WHOIS"], temp["IAM"], temp["RPM"], temp["RP"], temp["RR"], temp["AlmAck"], temp["UnCOVnt"], temp["getEvSum"], temp["BADDLIST"], temp["BGETINFO"], temp["BUTCTIMSYNC"]);
+                    const here = new BACnetServices(temp.get("WHOIS"), temp.get("IAM"), temp.get("RPM"), temp.get("RP"), temp.get("RR"), temp.get("AlmAck"), temp.get("UnCOVnt"), temp.get("getEvSum"), temp.get("BADDLIST"), temp.get("BGETINFO"), temp.get("BUTCTIMSYNC"));
 
                     BACnetSERVICES.set(TIME, here);
 
@@ -238,7 +238,7 @@ function displayLogFile(req, res)
 
                     temp.set("NLQ3", str);
 
-                    const here = new BacnetStatics(temp["ALQ"], temp["NLQ0"], temp["NLQ1"], temp["NLQ2"], temp["NLQ3"]);
+                    const here = new BacnetStatics(temp.get("ALQ"), temp.get("NLQ0"), temp.get("NLQ1"), temp.get("NLQ2"), temp.get("NLQ3"));
                     
                     BACnetSTATICS.set(TIME, here);
                     //const BacnetStatics = new makeStruct("ALQ, NLQ0, NLQ1, NLQ2, NLQ3");
