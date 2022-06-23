@@ -17,6 +17,42 @@ app.use(session({
     resave: false
 }));
 
+app.all("*", async (req, res, func) => {
+    const regex = /[/]api[/]/g;
+    console.log(`Incoming request from ${req.ip} to ${req.url}`);
+    if( regex.test(req.url) ){
+        try {
+            const url = req.url;
+            var path = "";
+            for( var i=0;i < url.length && url[i]!='?' ; i++ ){
+                path += url[i];
+            }
+            console.log(`Loading .${path}`);
+            var api = require(`.${path}`);
+            try {
+                await api.execute(req, res);
+            }
+            catch(err){
+                console.log(`Error: ${err.message}`)
+            }
+        }
+        catch(err){
+            console.log(`Failed to load .${req.url} ! \n error: ${err.message}`)
+            res.status(200).json({
+                success: false,
+                message: err.message,
+            });
+        }
+    }
+    else{
+        res.status(200).json({
+            success: false,
+            message: "Page not found ! ",
+        });
+    }
+});
+
+
 app.get('/', (req, res) => {
     res.send('Hello World!')
 })

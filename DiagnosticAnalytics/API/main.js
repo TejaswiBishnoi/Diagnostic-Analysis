@@ -103,16 +103,16 @@ function displayLogFile(req, res)
             {
                 TotalNumberofErrors = TotalNumberofErrors + 1;
             }
-            if(array[i][j] === "CheckForValidityOfRecipient():")
+            if(array[i][0] === "CheckForValidityOfRecipient():")
             {
-                var TIME = array[i][j+1]; //the timestamp
-                j = j+2; //skipping over the mentioned
+                var TIME = array[i][1]; //the timestamp
+                 //skipping over the mentioned
 
 
-                var toBe = " ";
-                for(let k = j; k< array[i].length; k++)
+                var toBe = "";
+                for(let k = 3; k< array[i].length; k++)
                 {
-                    toBe = toBe + array[i][k];
+                    toBe = toBe + array[i][k] + " ";
                 }
 
                 const here = new CheckForValidityOfRecipient(toBe);
@@ -141,7 +141,7 @@ function displayLogFile(req, res)
                     {
                         TIME += array[array[i].length -1][b];
                     }
-
+                    array[i][arr[i].length-1]
                     let k = i;
                     
                     const temp = new Map();
@@ -594,7 +594,7 @@ function displayLogFile(req, res)
         {
             if(arrValidity[i] != " ")
             {
-                if(flag == 0)
+                if(flag === 0)
                 {
                     //the first one has ',' in the end
                     arrHere.push(arrValidity[i].slice(0, arrValidity[i].length - 1));
