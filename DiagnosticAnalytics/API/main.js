@@ -1,8 +1,9 @@
 //need information from the body
 const fs = require("fs");
 const bodyParser = require("body-parser");
-//const { MAP } = require("requirejs");
+const { MAP } = require("requirejs");
 
+app.use(bodyParser.urlencoded({extended: true}));
 
 function makeStruct(keys) {
     if (!keys) return null;
@@ -61,15 +62,14 @@ function displayLogFile(req, res)
     // fs.readFile(req.body.file, "utf8", (err, data) => {
     //     if(err) throw err;
     //         array = data.toString().split("\n");
-
+        
     //     for(i in array) {
     //         console.log(array[i]);  //debugging
     //         array[i].split(" ");
     //         }
     // });
-    TESTCASE = TESTCASE.split("\n");
-    TESTCASE[0] = TESTCASE[0].split(" ");
-    array = TESTCASE;
+
+    array = TESTCASE.split(" ");
     
 
     var TotalNumberofErrors = 0;
@@ -112,7 +112,7 @@ function displayLogFile(req, res)
                 var toBe = " ";
                 for(let k = j; k< array[i].length; k++)
                 {
-                    toBe = toBe + array[i][k];
+                    toBe = toBe + array[i][k] + " ";
                 }
 
                 const here = new CheckForValidityOfRecipient(toBe);
@@ -584,7 +584,7 @@ function displayLogFile(req, res)
     var RECIPIENT = [];
     // it has 0, number number
 
-    ValidityofRECIPIENT.forEach(function(value, key){
+    CheckForValidityOfRecipient.forEach(function(value, key){
 
         var arrValidity = value.RecipientIndex.split(" ");
 
@@ -651,12 +651,7 @@ function displayLogFile(req, res)
     FINALSENDING.push([TotalNumberofErrors, lineNumber, TotalNumberofAlarmEntry,TotalSuccessfulAlarm,TotalMbusCalled]);
 
     res.send(FINALSENDING);
-    
-    
-    
+        
 }
-
-exports.display = displayLogFile;
-
 
 
