@@ -59,7 +59,7 @@ function App() {
     else {
         return (
             <logContext.Provider value={log}>
-                <ChartPage/>
+                <ChartPage changelog={setLog} />
             </logContext.Provider>
         );
     }
