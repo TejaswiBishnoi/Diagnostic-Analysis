@@ -8,7 +8,7 @@ A web application designed to perform analytics on stream of data from embedded 
   <li>JavaScript</li>
   <li>Node js</li>
   <li>React js</li>
-  <li>ReGraphs</li>
+  <li>ReChart</li>
   <li>Express</li>
   <li>Multer</li>
 </ul>
@@ -31,8 +31,8 @@ A web application designed to perform analytics on stream of data from embedded 
     <h3>React based frontend:</h3>
     React provides <b>faster rendering</b> by the use of virtual DOM and has a wide variety of developer tools. <b>Bootstrap</b> provides high end designs and thus makes the web application more interactive and appealing to the user.
   </li>
-  <li><h3>ReGraph: </h3>
-    ReGraph is a react toolkit for graph visualisation. The service allows for Automatic Data, Network Filtering, Custom Styling and Time Based analysis etc. Thus was fit for developing interactive graphs.
+  <li><h3>ReChart: </h3>
+    ReGraph is a react toolkit for graph visualisation. It allows to display the charts in react component. 
   <li><h3>RAM based storing</h3>
     Multer provides the option for the file to be stored on RAM or on the local disk, thus creating a double copy. We have thus opted for the RAM based temporary storage hence creating a use-and-throw based service system thus allowing space optimisation and faster read write.
     </li>
