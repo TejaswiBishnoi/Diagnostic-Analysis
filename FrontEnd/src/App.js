@@ -42,24 +42,38 @@ function App() {
     }
     if (log == null) {
         return (
-            <div>
-                <h3>
-                    Please Upload the Log file
-                </h3>
-                <div>
-                    <input type="file" onChange={onfileChange} />
-                    <Button onClick={onfileUpload} disabled={file == null} variant="primary" >
-                        Upload
-                    </Button>
-                </div>
+            <Container fluid>
+                <Row>
+                    <Col>
+                        <div className="text-center mt-5">
+                            <h3>
+                                DIAGNOSTIC ANALYTICS FOR AN EMBEDDED DEVICE
+                            </h3>
+                            
+                            <div className='mt-5'>
+                                To continue please select a log file and submit it for processing. 
+                            </div>
 
-            </div>
+                            <div className='mt-5'>
+                                <input type="file" onChange={onfileChange} /><br />
+                                
+                                <Button onClick={onfileUpload} disabled={file == null} variant="primary" >
+                                    Upload
+                                </Button>
+                            </div>
+
+                        </div>
+                    </Col>
+                </Row>
+                
+            </Container>
+
         );
     }
     else {
         return (
             <logContext.Provider value={log}>
-                <ChartPage/>
+                <ChartPage changelog={setLog} />
             </logContext.Provider>
         );
     }

@@ -185,6 +185,7 @@ function getData(req, res, next) {
             var j = 0; i++;
             while (j < 8 && i < data.length) {
                 let reg = data[i].match(/[0-9a-f]+/g);
+                console.log(data[i]);
                 obj.data[data[i].match(/[a-z]+_[a-z]+/i)[0]] = parseInt(reg[reg.length - 1], 16);
                 j++; i++;
             }
