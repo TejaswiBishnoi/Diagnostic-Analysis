@@ -1,12 +1,17 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const multer = require('multer');
 var session = require('express-session');
 const crypto = require('crypto');
 const app = express()
-const port = 3000;
+const port = 5000;
 const arc = require('./API/main');
+const ar = require('./API/api');
+var storage = multer.memoryStorage();
+var upload = multer({ storage: storage });
 
+app.use(cors());
 
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -17,49 +22,19 @@ app.use(session({
     resave: false
 }));
 
-app.all("*", async (req, res, func) => {
-    const regex = /[/]api[/]/g;
-    console.log(`Incoming request from ${req.ip} to ${req.url}`);
-    if( regex.test(req.url) ){
-        try {
-            const url = req.url;
-            var path = "";
-            for( var i=0;i < url.length && url[i]!='?' ; i++ ){
-                path += url[i];
-            }
-            console.log(`Loading .${path}`);
-            var api = require(`.${path}`);
-            try {
-                await api.execute(req, res);
-            }
-            catch(err){
-                console.log(`Error: ${err.message}`)
-            }
-        }
-        catch(err){
-            console.log(`Failed to load .${req.url} ! \n error: ${err.message}`)
-            res.status(200).json({
-                success: false,
-                message: err.message,
-            });
-        }
-    }
-    else{
-        res.status(200).json({
-            success: false,
-            message: "Page not found ! ",
-        });
-    }
-});
+
 
 
 app.get('/', (req, res) => {
     res.send('Hello World!')
 })
-app.post('/', (req, res) => {
-    arc.display(req, res);
+app.post('/', upload.single("file"), (req, res, next) => {
+    arc.display(req, res, next);
 })
-app.use(cors());
+app.post('/ab', upload.single("file"), (req, res) => {
+    ar.gd(req, res);
+})
+
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })

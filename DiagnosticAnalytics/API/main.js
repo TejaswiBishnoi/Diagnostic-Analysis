@@ -1,6 +1,7 @@
 //need information from the body
 const fs = require("fs");
 const bodyParser = require("body-parser");
+const { time } = require("console");
 //const { MAP } = require("requirejs");
 
 
@@ -16,7 +17,64 @@ function makeStruct(keys) {
     return constructor;
 }
 
-let TESTCASE = "CheckForValidityOfRecipient(): 62b2c066 RecipientIndex= 0, 3c00001  20971522";
+let TESTCASE = ` BACnet Services stats at TIME	62b1b27c
+WHOIS	91.000000	840711.000000	0.000108
+IAM	9.000000	579771.000000	0.000016
+RPM	1.000000	1321.000000	0.000757
+RP	1.000000	193.000000	0.005181
+RR	176.000000	197.000000	0.893401
+AlmAck	22.000000	44697.000000	0.000492
+UnCOVnt	1.000000	310.000000	0.003226
+getEvSum	2.000000	38.000000	0.052632
+BADDLIST	0.000000	152.000000	0.000000
+BGETINFO	36.000000	38.000000	0.947368
+BUTCTIMSYNC	39.000000	28.000000	1.392857
+Ethernet Statistics at TIME:  62b1b36a
+Rx_Bytes b309dc1
+Tx_Bytes 1099a70
+Rx_Drop 0
+Tx_Drop 0
+Rx_Error 0
+Tx_Error 0
+Rx_Packets 251ca3
+Tx_Packets 2593d
+********* Started Now 62b1d914 ********** 
+BACnet statistics at TIME	62b1b36a
+ALQ : totalrecordsadded = -340000768, totalrecordsdropped = 23
+ALQ : usedrecordscount = 0, readindex = 13631488, currentindex = 13631488
+NLQ0 : totalrecordsadded = 0, totalrecordsdropped = 0
+NLQ0 : usedrecordscount = 0, readindex = 0, currentindex = 0
+NLQ0 : freecount = 0, dropiam = 0 nlqloadpctlimit = 52
+NLQ1 : totalrecordsadded = 31, totalrecordsdropped = 0
+NLQ1 : usedrecordscount = 0, readindex = 0, currentindex = 127
+NLQ1 : freecount = 0, dropiam = 0 nlqloadpctlimit = 26
+NLQ2 : totalrecordsadded = 65470464, totalrecordsdropped = 351862784
+NLQ2 : usedrecordscount = 50397184, readindex = 50397184, currentindex = 8323072
+NLQ2 : freecount = 999, dropiam = 0 nlqloadpctlimit = 800
+NLQ3 : totalrecordsadded = 150, totalrecordsdropped = 149
+NLQ3 : usedrecordscount = 0, readindex = 127, currentindex = 0
+NLQ3 : freecount = 0, dropiam = 0 nlqloadpctlimit = 120
+
+Memory Usage at TIME:  62b1b36a
+ Total System Memory            :       215052 KB
+ Available System Memory        :        85724 KB
+ Mbus frame send: 0x10 0x40 0x23 0x63 0x16 	 END
+CheckForValidityOfRecipient(): 62b1b5f9 RecipientIndex= 0, 3c00001  20971524
+ 
+ BACnet Services stats at TIME	62b1b5f0
+WHOIS	91.000000	850984.000000	0.000107
+IAM	10.000000	585774.000000	0.000017
+SUBCOVP	0.000000	1.000000	0.000000
+RPM	1.000000	1339.000000	0.000747
+RP	1.000000	193.000000	0.005181
+RR	176.000000	197.000000	0.893401
+AlmAck	22.000000	45428.000000	0.000484
+UnCOVnt	1.000000	310.000000	0.003226
+getEvSum	2.000000	38.000000	0.052632
+BADDLIST	0.000000	152.000000	0.000000
+BGETINFO	36.000000	38.000000	0.947368
+BUTCTIMSYNC	39.000000	28.000000	1.392857
+`;
 
 // WHOIS	1.000000	8904.000000	0.000112
 // IAM	0.000000	5100.000000	0.000000
@@ -29,7 +87,7 @@ let TESTCASE = "CheckForValidityOfRecipient(): 62b2c066 RecipientIndex= 0, 3c000
 // BADDLIST	0.000000	4.000000	0.000000
 // BGETINFO	0.000000	1.000000	0.000000
 // BUTCTIMSYNC
-const BACnetServices = new makeStruct("WHOIS, IAM, RPM, RP, RR, AlmAck, UnCOVnt, getEvSum,BADDLIST, BGETINFO, BUTCTIMSYNC");
+const BACnetServices = new makeStruct("WHOIS, IAM, RPM, RP, RR, AlmAck, UnCOVnt, getEvSum, BADDLIST, BGETINFO, BUTCTIMSYNC");
 
 const EthernetStatics = new makeStruct("Rx_Bytes, Tx_Bytes, Rx_Drop, Tx_Drop, Rx_Error, Tx_Error, Rx_Packets, Tx_Packets");
 
@@ -54,21 +112,18 @@ const MemoryUsage = new makeStruct("TotalSystemMemory, AvailableSystemMemory");
 
 const CheckForValidityOfRecipient = new makeStruct("RecipientIndex");
 
-function displayLogFile(req, res)
+function displayLogFile(req, res, next)
 {
+
+    TESTCASE = String(req.file.buffer);
     var array;
-
-    // fs.readFile(req.body.file, "utf8", (err, data) => {
-    //     if(err) throw err;
-    //         array = data.toString().split("\n");
-
-    //     for(i in array) {
-    //         console.log(array[i]);  //debugging
-    //         array[i].split(" ");
-    //         }
-    // });
     TESTCASE = TESTCASE.split("\n");
-    TESTCASE[0] = TESTCASE[0].split(" ");
+    for (i = 0; i < TESTCASE.length; i++) {
+        TESTCASE[i] = TESTCASE[i].replace(/\t/g, ' ');
+        TESTCASE[i] = TESTCASE[i].replace(/\r/g, '');
+        TESTCASE[i] = TESTCASE[i].split(" ");
+    }
+    
     array = TESTCASE;
     
 
@@ -93,13 +148,12 @@ function displayLogFile(req, res)
     {
         lineNumber = lineNumber + 1;
 
-        for(let j = 0; j< array[i].length; j++)
-        {
-            if(array[i][j] === "CreateAlarmEntry():objid:")
+        
+            if(array[i][0] === "CreateAlarmEntry():objid:")
             {
                 TotalNumberofAlarmEntry = TotalNumberofAlarmEntry + 1;
             }
-            if(array[i][j] === "SenCOVMessage():")
+            if(array[i][0] === "SenCOVMessage():")
             {
                 TotalNumberofErrors = TotalNumberofErrors + 1;
             }
@@ -120,19 +174,19 @@ function displayLogFile(req, res)
                 ValidityofRECIPIENT.set(TIME, here);
             }
 
-            if(array[i][j] === "CheckForValidityOfRecipient():Sent")
+            if(array[i][0] === "CheckForValidityOfRecipient():Sent")
             {
                 TotalSuccessfulAlarm = TotalSuccessfulAlarm + 1;
             }
 
-            if(array[i][j] === "Mbus")
+            if(array[i][1] === "Mbus")
             {
                 TotalMbusCalled = TotalMbusCalled + 1;
             }
 
-            if(array[i][j] === "BACnet")
+            if(array[i][1] === "BACnet")
             {
-                if(array[i][j+1] === "Services")
+                if(array[i][2] === "Services")
                 {
                     
                     var TIME = "";
@@ -141,20 +195,26 @@ function displayLogFile(req, res)
                     {
                         TIME += array[array[i].length -1][b];
                     }
-                    array[i][arr[i].length-1]
+
                     let k = i;
                     
                     const temp = new Map();
 
-                    for(k = i; k <= i+10; k++)
+                    for (k = i + 1; k <= titer; k++)
                     {
+                        if (array[k][0] === 'SUBCOVP') {
+                            titer++; continue;
+                        }
                         var key = array[k][0];
                         
-                        var toBe = " ";
+                        var toBe = "";
                         for(let w = 1; w<array[k].length; w++)
                         {
-                            toBe += array[k][w];
-                            toBe += " ";
+                            if (array[k][w] != '') {
+                                toBe += array[k][w];
+                                toBe += " ";
+                            }
+                            
                         }
                         temp.set(key, toBe);
                     }
@@ -162,26 +222,23 @@ function displayLogFile(req, res)
                     const here = new BACnetServices(temp.get("WHOIS"), temp.get("IAM"), temp.get("RPM"), temp.get("RP"), temp.get("RR"), temp.get("AlmAck"), temp.get("UnCOVnt"), temp.get("getEvSum"), temp.get("BADDLIST"), temp.get("BGETINFO"), temp.get("BUTCTIMSYNC"));
 
                     BACnetSERVICES.set(TIME, here);
+                    console.log(here);
 
                 }
-                if(array[i][j+1] === "statistics")
+                if(array[i][2] === "statistics")
                 {
-                    var lastWord = array[i].length - 1;
-                    var TIME = "";
 
-                    var lengthOfLastWord = array[i][lastWord].length ;
+                    var TIME = array[i][array[i].length-1];
 
-                    for(let k = 5; k<lengthOfLastWord; ++k)
-                    {
-                        TIME += array[lastWord][k];
-                    }
+        
+
 
                     //i+1, i+2 -> ALQ
                     //after that, each three lines has NLQ0, NLQ1, NLQ2
 
                     const temp = new Map();
 
-                    let str = " ";
+                    let str = "";
                     for(let k = i+1; k<=i+2; k++)
                     {
                         for(let w = 1; w < array[k].length; w++)
@@ -192,7 +249,7 @@ function displayLogFile(req, res)
                     }
                     temp.set("ALQ", str);
 
-                    str = " ";
+                    str = "";
 
                     for(let k = i+3; k<=i+5; k++)
                     {
@@ -205,7 +262,7 @@ function displayLogFile(req, res)
 
                     temp.set("NLQ0", str);
 
-                    str = " ";
+                    str = "";
 
                     for(let k = i+6; k<=i+8; k++)
                     {
@@ -219,7 +276,7 @@ function displayLogFile(req, res)
 
                     temp.set("NLQ1", str);
 
-                    str = " ";
+                    str = "";
 
                     for(let k = i+9; k<=i+11; k++)
                     {
@@ -233,7 +290,7 @@ function displayLogFile(req, res)
 
                     temp.set("NLQ2", str);
 
-                    str = " ";
+                    str = "";
 
                     for(let k = i+12; k<=i+14; k++)
                     {
@@ -257,7 +314,7 @@ function displayLogFile(req, res)
 
             if(array[i][0] === "Ethernet")
             {
-                var TIME = array[i][arr[i].length - 1];
+                var TIME = array[i][array[i].length - 1];
                 //const EthernetStatics = new makeStruct("Rx_Bytes, Tx_Bytes, Rx_Drop, Tx_Drop, Rx_Error, Tx_Error, Rx_Packets, Tx_Packets");
                 var RxBytes = array[i+1][1];
                 var TxBytes = array[i+2][1];
@@ -286,14 +343,17 @@ function displayLogFile(req, res)
                 MemoryUSAGE.set(TIME, here);
             }
 
-            if(array[i][0] === "*********")
+            if (array[i][0] === "*********" || array[i][1]=="Started")
             {
-                var TIME = array[i][array[i].length - 2];
+                var TIME = array[i][4];
+                console.log(array[i][0]);
+                
                 
                 var timehere = parseInt(TIME, 16)*1000;
                 StartingNow.push(timehere);
             }
-        }
+            //''
+        
     }
 
     //const BacnetStatics = new makeStruct("ALQ, NLQ0, NLQ1, NLQ2, NLQ3");
@@ -306,12 +366,12 @@ function displayLogFile(req, res)
     BACnetSTATICS.forEach (function(value, key) {
         //key -> timestamp
         //value -> string
-
         var arrALQ = value.ALQ.split(" ");
-        var arrNLQ0 = value.NLQ0.spilt(" ");
-        var arrNLQ1 = value.NLQ1.spilt(" ");
-        var arrNLQ2 = value.NLQ2.spilt(" ");
-        var arrNLQ3 = value.NLQ3.spilt(" ");
+        var arrNLQ0;
+        arrNLQ0 = value.NLQ0.split(" ");
+        var arrNLQ1 = value.NLQ1.split(" ");
+        var arrNLQ2 = value.NLQ2.split(" ");
+        var arrNLQ3 = value.NLQ3.split(" ");
 
         const BACNETSTATICS = {
             timestamp: parseInt(key,16)*1000,
@@ -372,8 +432,10 @@ function displayLogFile(req, res)
 
     var BackNETSERVICES = [];
 
-    BACnetSERVICES.forEach(function (value, key){
-
+    BACnetSERVICES.forEach(function (value, key) {
+        ;
+        ;
+        ;
         var arrayWHOIS = [];
         var arrayIAM = [];
         var arrayRPM = [];
@@ -385,7 +447,7 @@ function displayLogFile(req, res)
         var arrayBADDLIST = [];
         var arrayBGETINFO = [];
         var arrayBUTCTIMSYNC = [];
-
+        ;
         var whois = value.WHOIS.split(" ");
 
         for(let i = 0; i < whois.length; i++)
@@ -445,10 +507,9 @@ function displayLogFile(req, res)
                 arrayAlmAck.push(almack[i]);
             }
         }
-
+        console.log(key);
         var uncovnt = value.UnCOVnt.split(" ");
-
-        for(let i = 0; i < rp.length; i++)
+        for (let i = 0; i < 3; i++)
         {
             if(uncovnt[i] != " ")
             {
@@ -612,7 +673,7 @@ function displayLogFile(req, res)
             data:{
                 Recipientindex:arrHere[0],
                 NotificationclassId:arrHere[1],
-                ObjectId:arrHere[2]
+                ObjectId:arrHere[3]
             }
         }
 
