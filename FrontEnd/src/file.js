@@ -61,7 +61,7 @@ export default function func(log, uplim, dwnlim) {
     }
     i = 0;
     while (i < log.alerts.length) {
-        if (log.alerts[i].Time == null) { i++; continue; }
+        if (log.alerts[i].Time == null) continue;
         if (log.alerts[i].Time <= uplim && log.alerts[i].Time >= dwnlim) {
             Resp.alerts.push(log.alerts[i]);
         }
