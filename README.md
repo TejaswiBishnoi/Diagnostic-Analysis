@@ -1,6 +1,6 @@
 # Diagnostic-Analysis
 
-A web application designed to perform analytics on stream of data from embedded devices.The report is presented in the form of charts and line graphs along with descriptive texts.
+A web application designed to perform analytics on stream of data from embedded devices.The report is presented in the form of charts and line graphs along with descriptive texts. SAMPLE LOGS - https://drive.google.com/drive/folders/1FGh1GCs2NCI23YhEel-Qo25hHzi_K8WA?usp=sharing
 <br>
 
 <h1>Technologies Used</h1>
