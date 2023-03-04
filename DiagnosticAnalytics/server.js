@@ -11,7 +11,9 @@ const ar = require('./API/api');
 var storage = multer.memoryStorage();
 var upload = multer({ storage: storage });
 
-app.use(cors());
+app.use(cors(
+    {origin: '*'}
+));
 
 app.use(bodyParser.urlencoded({extended: true}));
 
