@@ -61,7 +61,7 @@ function FileSelect(props) {
             file.name
         );
         console.log(file);
-        axios.post("http://localhost:5000/ab", formData).then((response) => { props.setLog(response.data); console.log(response.data) }).catch(function (error) {
+        axios.post("https://Diagnostic-Analysis.tejaswibishnoi.repl.co/ab", formData).then((response) => { props.setLog(response.data); console.log(response.data) }).catch(function (error) {
             console.log(error);
         });;
     }
